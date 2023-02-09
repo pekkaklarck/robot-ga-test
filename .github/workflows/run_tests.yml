@@ -36,7 +36,7 @@ jobs:
 
       - name: Run test
         run: |
-          robot -d results tests.robot
+          robot --outputdir results --prerebotgenerator GenerateSummary.py:$GITHUB_STEP_SUMMARY tests.robot
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
@@ -44,3 +44,11 @@ jobs:
           name: log and report
           path: results/*.html
           retention-days: 1
+        if: always()
+
+      - name: HTML Preview
+        id: html_preview
+        uses: pavi2410/html-preview-action@v2
+        with:
+          html_file: 'index.html'
+        if: always()
