@@ -36,7 +36,7 @@ jobs:
 
       - name: Run test
         run: |
-          robot --outputdir results --prerebotmodifier SummaryGenerator.py:$GITHUB_STEP_SUMMARY tests.robot
+          robot --outputdir results --xunit xunit.xml --prerebotmodifier SummaryGenerator.py:$GITHUB_STEP_SUMMARY tests.robot
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
@@ -44,4 +44,10 @@ jobs:
           name: Report and log
           path: results/*.html
           retention-days: 1
+        if: always()
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          junit_files: "results/xunit.xml"
         if: always()
